@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capítulo 19 — ¿Es Real la Inteligencia Artificial?</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1208;
+    --paper: #f5f0e8;
+    --cream: #ede7d5;
+    --accent: #8b1a1a;
+    --gold: #c9922a;
+    --muted: #6b6050;
+    --code-bg: #2a2318;
+    --code-text: #e8d5a3;
+    --border: #c8b89a;
+    --highlight: #fff3cd;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 17px;
+    line-height: 1.75;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, #3a2510 0%, var(--ink) 70%);
+  }
+  .header-inner { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; }
+  .chapter-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    font-weight: 900;
+    line-height: 1.15;
+    color: var(--paper);
+    margin-bottom: 1rem;
+  }
+  header h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+  .header-sub {
+    font-family: 'Source Serif 4', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: #c0b090;
+    margin-bottom: 1.5rem;
+  }
+  .objectives {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    text-align: left;
+  }
+  .obj-item {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(201,146,42,0.3);
+    border-radius: 6px;
+    padding: 0.6rem 0.9rem;
+    font-size: 0.82rem;
+    color: #d4c8b0;
+    line-height: 1.4;
+  }
+  .obj-item::before { content: '✓ '; color: var(--gold); }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 820px; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--cream);
+    border-bottom: 2px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  nav ul {
+    display: flex;
+    gap: 0;
+    list-style: none;
+    overflow-x: auto;
+    padding: 0 1rem;
+    scrollbar-width: none;
+  }
+  nav ul::-webkit-scrollbar { display: none; }
+  nav a {
+    display: block;
+    padding: 0.75rem 1rem;
+    font-size: 0.8rem;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    text-decoration: none;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  nav a:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* ── SECTIONS ── */
+  section {
+    padding: 3rem 0 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+  section:last-of-type { border-bottom: none; }
+
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 1.2rem;
+    line-height: 1.2;
+  }
+  h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 2rem 0 0.8rem;
+    padding-left: 0.9rem;
+    border-left: 3px solid var(--gold);
+  }
+  h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin: 1.5rem 0 0.5rem;
+  }
+
+  p { margin-bottom: 1rem; }
+
+  /* ── PULL QUOTES ── */
+  .quote-block {
+    margin: 2rem 0;
+    padding: 1.2rem 1.5rem;
+    border-left: 4px solid var(--accent);
+    background: var(--cream);
+    border-radius: 0 8px 8px 0;
+  }
+  .quote-block p {
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+  }
+  .quote-attr {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  /* ── BIOGRAPHY BOX ── */
+  .bio-box {
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 10px;
+    padding: 2rem 2rem 1.5rem;
+    margin: 2rem 0;
+    position: relative;
+  }
+  .bio-box h3 {
+    color: var(--gold);
+    border-left-color: var(--gold);
+    font-size: 1.1rem;
+    margin-top: 0;
+  }
+  .bio-box p { color: #d8cfc0; font-size: 0.95rem; }
+
+  /* ── DEFINITION BOX ── */
+  .definition {
+    background: var(--highlight);
+    border: 1px solid #e0c060;
+    border-radius: 8px;
+    padding: 1rem 1.4rem;
+    margin: 1.5rem 0;
+  }
+  .definition strong { color: var(--accent); }
+
+  /* ── TECHNIQUE CARDS ── */
+  .technique-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.2rem;
+    margin: 1.5rem 0;
+  }
+  .technique-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.2rem 1.3rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .technique-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  }
+  .technique-card h4 {
+    color: var(--accent);
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+  }
+  .technique-card p { font-size: 0.9rem; color: #444; margin: 0; }
+
+  /* ── BULLET LIST ── */
+  .content-list {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 1.5rem;
+  }
+  .content-list li {
+    padding: 0.4rem 0 0.4rem 1.6rem;
+    position: relative;
+    font-size: 0.97rem;
+  }
+  .content-list li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+  }
+
+  /* ── CODE / ALGORITHM ── */
+  .algo-box {
+    background: var(--code-bg);
+    color: var(--code-text);
+    border-radius: 8px;
+    padding: 1.3rem 1.5rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+  }
+  .algo-box pre {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    line-height: 1.7;
+    white-space: pre;
+  }
+  .algo-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  /* ── TABLE ── */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.2rem 0;
+    font-size: 0.9rem;
+  }
+  .data-table th {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 0.6rem 1rem;
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+  }
+  .data-table td {
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .data-table tr:nth-child(even) { background: var(--cream); }
+
+  /* ── OBSERVATION CALLOUT ── */
+  .obs-box {
+    border: 2px solid var(--gold);
+    border-radius: 8px;
+    padding: 1.2rem 1.5rem;
+    margin: 1.5rem 0;
+    background: #fffdf5;
+    position: relative;
+  }
+  .obs-box .obs-num {
+    position: absolute;
+    top: -0.7rem;
+    left: 1rem;
+    background: var(--gold);
+    color: white;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    padding: 0.1rem 0.6rem;
+    border-radius: 20px;
+    letter-spacing: 0.1em;
+  }
+  .obs-box p, .obs-box li { font-size: 0.92rem; }
+  .obs-box ol { padding-left: 1.3rem; }
+  .obs-box ol li { margin-bottom: 0.4rem; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    color: #a09070;
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.82rem;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.06em;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  section { animation: fadeUp 0.5s ease both; }
+  section:nth-child(1) { animation-delay: 0.05s; }
+  section:nth-child(2) { animation-delay: 0.1s; }
+  section:nth-child(3) { animation-delay: 0.15s; }
+  section:nth-child(4) { animation-delay: 0.2s; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    header { padding: 2rem 1rem 1.5rem; }
+    section { padding: 2rem 0 1.5rem; }
+    h2 { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════ HEADER ═══════════════════════ -->
+<header>
+  <div class="header-inner">
+    <div class="chapter-label">Introducción a la Computación · Capítulo 19</div>
+    <h1>¿Es Real la <em>Inteligencia Artificial?</em></h1>
+    <p class="header-sub">George Beekman · Páginas 670–692</p>
+  </div>
+</header>
+
+<!-- ═══════════════════════ NAV ═══════════════════════ -->
+<nav>
+  <ul>
+    <li><a href="#turing">Alan Turing</a></li>
+    <li><a href="#pensamientos">Máquinas pensantes</a></li>
+    <li><a href="#prueba">Prueba de Turing</a></li>
+    <li><a href="#definicion">¿Qué es la IA?</a></li>
+    <li><a href="#juegos">Juegos de apertura</a></li>
+  </ul>
+</nav>
+
+<div class="container">
+
+<!-- ═══════════════════════ SECCIÓN 1: TURING ═══════════════════════ -->
+<section id="turing">
+  <h2>Alan Turing, Inteligencia Militar y Máquinas Inteligentes</h2>
+
+  <div class="quote-block">
+    <p>"Hasta qué punto consideramos que algo se comporta de manera inteligente se determina tanto por nuestro estado mental y aprendizaje como por las propiedades del objeto que se considera."</p>
+    <span class="quote-attr">— Alan Turing</span>
+  </div>
+
+  <div class="bio-box">
+    <h3>Alan M. Turing (1912–1954)</h3>
+    <p>Matemático británico considerado el pensador más importante en la historia de la informática. En 1936, siendo estudiante en Princeton, publicó <em>"On Computable Numbers"</em>, un documento que sentó el fundamento teórico de la moderna ciencia de la informática. En él describía la famosa <strong>«máquina Turing»</strong>: un dispositivo que podría leer instrucciones de una cinta de papel perforada y ejecutar las operaciones críticas de una computadora.</p>
+    <p style="margin-top:0.8rem;">El documento también establecía los límites de la ciencia de la informática demostrando matemáticamente que algunos problemas simplemente no pueden ser solucionados por ninguna clase de computadora.</p>
+  </div>
+
+  <h3>Colossus y la Segunda Guerra Mundial</h3>
+  <p>Después de recibir su doctorado en 1938, Turing tuvo la oportunidad de llevar su teoría a la realidad. El gobierno británico reunió un equipo de matemáticos e ingenieros con la misión secreta de descifrar el código militar alemán. Bajo el liderazgo de Turing, el grupo construyó <strong>Colossus</strong>, una máquina de propósito único considerada por muchos como la primera computadora digital electrónica.</p>
+  <p>Desde que se terminó Colossus en 1943 hasta el final de la guerra, descifró satisfactoriamente los códigos nazis. Este hecho fue ocultado por el gobierno británico durante décadas. Muchos expertos creen que Colossus fue finalmente el responsable de la derrota de los nazis.</p>
+
+  <h3>El inicio de la Inteligencia Artificial</h3>
+  <p>Turing inició el campo de la inteligencia artificial con su documento de 1950 titulado <em>"Computing Machinery and Intelligence"</em>, en el que proponía una prueba concreta para determinar si una máquina era inteligente. En los años siguientes defendió la posibilidad de emular el pensamiento humano a través de la computación, e incluso fue coautor del primer programa que jugaba al ajedrez.</p>
+  <p>Cuatro décadas después de su muerte, su trabajo sigue siendo relevante entre científicos informáticos, matemáticos y filósofos. La arquitectura de las computadoras actuales está basada en sus ideas. El premio más alto en informática, el <strong>Premio Turing</strong>, lleva su nombre.</p>
+</section>
+
+<!-- ═══════════════════════ SECCIÓN 2: MÁQUINAS PENSANTES ═══════════════════════ -->
+<section id="pensamientos">
+  <h2>Pensamientos sobre las Máquinas Pensantes</h2>
+
+  <div class="quote-block">
+    <p>"En todo caso, ¿qué es la inteligencia? Sólo es una palabra que las personas utilizan para nombrar esos procesos desconocidos con los que nuestro cerebro resuelve los problemas que catalogamos de difíciles."</p>
+    <span class="quote-attr">— Marvin Minsky, pionero de IA</span>
+  </div>
+
+  <p>Si se le pide a 10 personas que definan la inteligencia, probablemente se obtendrán 10 respuestas distintas. Algunas de las más comunes son:</p>
+
+  <ul class="content-list">
+    <li>La capacidad de aprender a partir de la experiencia</li>
+    <li>El poder de pensar</li>
+    <li>La capacidad de razonar</li>
+    <li>La capacidad de percibir relaciones</li>
+    <li>El poder de comprender</li>
+    <li>La capacidad de utilizar herramientas</li>
+    <li>Intuición</li>
+  </ul>
+
+  <p>Es difícil definir y entender la inteligencia, incluso para los filósofos y psicoanalistas que dedican sus vidas a estudiarla. Pero esa cualidad de elusión es, para muchas personas, la característica que diferencia a los humanos de otras especies. Por tanto, no debe sorprendernos que la controversia se centre continuamente alrededor de las preguntas <em>«¿Una máquina puede ser inteligente?»</em> y <em>«¿Puede pensar una máquina?»</em>.</p>
+</section>
+
+<!-- ═══════════════════════ SECCIÓN 3: PRUEBA ═══════════════════════ -->
+<section id="prueba">
+  <h2>¿Puede Pensar una Máquina? — La Prueba de Turing</h2>
+
+  <div class="quote-block">
+    <p>"Una máquina puede considerarse inteligente cuando puede pasar por humano en una prueba a ciegas."</p>
+    <span class="quote-attr">— Alan Turing</span>
+  </div>
+
+  <p>En su documento de 1950, Alan Turing sugirió que la pregunta «¿Puede pensar una máquina?» era demasiado vaga y filosófica para tener valor práctico. Para hacerla más concreta, propuso el <strong>«juego de imitación»</strong>.</p>
+
+  <div class="definition">
+    <strong>La Prueba de Turing</strong> implica a dos personas y una computadora. Una persona (el interrogador) se sienta a solas en una sala y escribe preguntas en un terminal sobre cualquier tema: matemáticas, ciencia, política, deportes, ocio, arte, relaciones humanas, emociones. El interrogador intenta adivinar si las respuestas que recibe fueron escritas por la otra persona o generadas por la computadora. <strong>Una computadora demuestra comportamiento inteligente si engaña repetidamente a los interrogadores haciéndoles pensar que es una persona.</strong>
+  </div>
+
+  <p>Turing no proyectó esta prueba como la única forma de demostrar la inteligencia de una máquina; apuntó que una máquina, aun fallando, todavía podría ser inteligente. Hasta el momento, ninguna computadora se ha aproximado a superarla, a pesar de décadas de investigación en IA. La mayoría de investigadores actuales favorecen definiciones menos rigurosas de inteligencia artificial.</p>
+</section>
+
+<!-- ═══════════════════════ SECCIÓN 4: DEFINICIÓN ═══════════════════════ -->
+<section id="definicion">
+  <h2>¿Qué es la Inteligencia Artificial?</h2>
+
+  <div class="technique-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); margin-bottom:2rem;">
+    <div class="technique-card">
+      <h4>Definición de Rich</h4>
+      <p>"La IA es el estudio de cómo conseguir que las computadoras hagan las cosas que, por el momento, las personas hacen mejor." — Elaine Rich</p>
+    </div>
+    <div class="technique-card">
+      <h4>Definición de Winston</h4>
+      <p>"La IA es el estudio de las ideas que permiten a las computadoras hacer las cosas que hacen que las personas parezcan inteligentes." — Patrick Henry Winston</p>
+    </div>
+    <div class="technique-card">
+      <h4>Definición ampliada</h4>
+      <p>"La IA es el estudio de los cálculos que hacen posible percibir, razonar y actuar." — Patrick Henry Winston</p>
+    </div>
+  </div>
+
+  <p>De acuerdo con estas definiciones, la inteligencia artificial es una <strong>frontera móvil</strong>. La historia del campo lo confirma: en la década de 1950, muchos investigadores se esforzaron en crear computadoras que pudieran jugar damas y ajedrez. Actualmente las computadoras pueden batir a los mejores jugadores humanos, y relativamente pocos investigadores estudian ya estos juegos. En palabras de un investigador: la IA es «cualquier cosa que todavía no se ha hecho».</p>
+
+  <h3>Dos aproximaciones principales</h3>
+
+  <div class="technique-grid">
+    <div class="technique-card">
+      <h4>Simulación del pensamiento humano</h4>
+      <p>Intenta utilizar las computadoras para simular los procesos mentales humanos. Un experto pide a personas que describan cómo resuelven un problema e intenta capturar esas respuestas en un modelo de software.</p>
+    </div>
+    <div class="technique-card">
+      <h4>Diseño independiente</h4>
+      <p>Diseña máquinas inteligentes independientemente de cómo piensan las personas. La inteligencia humana es simplemente una clase posible de inteligencia; el método de una máquina puede ser diferente pero no menos inteligente.</p>
+    </div>
+  </div>
+
+  <h3>Problemas de la metodología de simulación</h3>
+  <ul class="content-list">
+    <li>La mayoría de las personas tienen dificultad para entender y describir cómo hacen las cosas. La inteligencia humana incluye pensamientos inconscientes y otros procesos mentales difíciles de describir.</li>
+    <li>Hay diferencias inmensas entre la estructura del cerebro humano y la de una computadora. Incluso las supercomputadoras más potentes no pueden aproximarse a la capacidad de procesamiento paralelo del cerebro.</li>
+    <li>La mejor forma de hacer algo con una máquina es a menudo muy distinta a como lo harían las personas. Muchos intentos antiguos en IA fracasaron porque fueron diseñados para imitar la inteligencia humana en lugar de aprovechar las capacidades únicas de la computadora.</li>
+  </ul>
+</section>
+
+<!-- ═══════════════════════ SECCIÓN 5: JUEGOS ═══════════════════════ -->
+<section id="juegos">
+  <h2>Juegos de Apertura — Técnicas Fundamentales de la IA</h2>
+
+  <p>Uno de los primeros dominios más populares para la investigación en IA fue el tablero de ajedrez. Los juegos de damas y ajedrez fueron elegidos porque son fáciles de representar en memoria digital, tienen reglas claramente definidas y objetivos inequívocos. Las técnicas desarrolladas en este campo todavía se utilizan en distintas aplicaciones:</p>
+
+  <div class="technique-grid">
+    <div class="technique-card">
+      <h4>🔍 Búsqueda</h4>
+      <p>Una forma de ganar en un juego es mediante la búsqueda, mirando más allá de las posibilidades generadas por cada movimiento potencial. Las computadoras de alta velocidad son mejores que las personas para este tipo de procesamiento repetitivo. Para los juegos más complejos, la búsqueda por <strong>fuerza bruta</strong> no resulta práctica: el asombroso número de puntos de decisión obliga a guiar la búsqueda con estrategia y heurísticas.</p>
+    </div>
+    <div class="technique-card">
+      <h4>🧭 Heurísticos</h4>
+      <p>Un <strong>heurístico</strong> es un método práctico. A diferencia de los algoritmos exactos, los heurísticos aplican juicios que la experiencia indica que probablemente son ciertos. Un programa de ajedrez podría usar el juicio: «mantenga los peones en la fila del rey tanto tiempo como sea posible». Son reglas de decisión que guían la búsqueda inteligentemente.</p>
+    </div>
+  </div>
+
+  <div class="obs-box">
+    <span class="obs-num">NOTA HISTÓRICA</span>
+    <p>El programa de damas del investigador <strong>Jonathan Schaeffer</strong> utiliza una base de datos enorme con las posiciones del tablero para evaluar cada movimiento, y juega tan bien como los mejores jugadores humanos del mundo. Emplea la técnica de la <em>fuerza bruta</em>: la repetición rápida de una operación sencilla hasta encontrar la respuesta.</p>
+  </div>
+
+  <div style="margin-top: 2rem; padding: 1.5rem; background: var(--cream); border-radius: 10px; border: 1px solid var(--border);">
+    <h4 style="margin-top:0;">Contenido relacionado del libro</h4>
+    <p style="font-size:0.9rem; margin-bottom:0.5rem;">Las páginas 670–692 corresponden al inicio del <strong>Capítulo 19</strong> y también contienen material del Capítulo 18 sobre Fundamentos de Programación Estructurada, que incluye:</p>
+    <ul class="content-list" style="font-size:0.88rem;">
+      <li>Contadores y acumuladores aditivos (§18.9.2 – §18.9.3)</li>
+      <li>Repetición controlada por contador (§18.9.4)</li>
+      <li>Acumuladores multiplicativos y productorios</li>
+      <li>Ejemplos prácticos con pseudocódigo NOLAE y pruebas de escritorio</li>
+    </ul>
+  </div>
+</section>
+
+</div><!-- /container -->
+
+<footer>
+  Introducción a la Computación · George Beekman · Págs. 670–692 &nbsp;|&nbsp; Capítulos 18 &amp; 19
+</footer>
+
+</body>
+</html>
